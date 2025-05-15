@@ -5,6 +5,9 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 require("dotenv").config();
 
+// Importa le rotte dei prodotti
+const productRoutes = require("./routes/productRoutes");
+
 // Middleware
 app.use(express.json());
 
@@ -14,10 +17,13 @@ mongoose
   .then(() => console.log("Connesso a MongoDB Atlas"))
   .catch((err) => console.error("Errore connessione MongoDB:", err));
 
-// Rotta di test
+// Rotta base
 app.get("/", (req, res) => {
   res.send("API attiva e funzionante!");
 });
+
+// Usa le rotte dei prodotti
+app.use("/api/products", productRoutes);
 
 // Avvio del server
 app.listen(PORT, () => {
