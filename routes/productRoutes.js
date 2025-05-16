@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const {
   getAllProducts,
-  createProduct,
+  addProduct,
   getProductById,
   updateProduct,
   deleteProduct
@@ -13,7 +13,7 @@ const {
 router.get("/", getAllProducts);
 
 // POST un nuovo prodotto
-router.post("/", createProduct);
+router.post("/", addProduct);
 
 // GET un prodotto specifico per ID
 router.get("/:id", getProductById);
