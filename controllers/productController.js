@@ -13,7 +13,7 @@ exports.getAllProducts = async (req, res) => {
 };
 
 // POST - Aggiunge un nuovo prodotto (con scraping)
-exports.createProduct = async (req, res) => {
+exports.addProduct = async (req, res) => {
   const { url, category } = req.body;
 
   try {
