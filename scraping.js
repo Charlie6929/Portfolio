@@ -1,25 +1,23 @@
 // scraping.js
-async function scrapeAmazonMock() {
-  return [
-    {
-      name: "Echo Dot (4ª generazione)",
-      price: 49.99,
-      category: "Smart Home",
-      inStock: true,
-    },
-    {
-      name: "Fire TV Stick 4K",
-      price: 39.99,
-      category: "Media Streaming",
-      inStock: true,
-    },
-    {
-      name: "Cuffie Wireless Sony WH-1000XM4",
-      price: 279.99,
-      category: "Elettronica",
-      inStock: false,
-    },
-  ];
+// Simulazione scraping per demo — restituisce dati fittizi
+
+async function getScrapedData(url) {
+  console.log(`Simulazione scraping da URL: ${url}`);
+
+  // Simulazione dati prodotto
+  return {
+    name: "Demo Product from URL",
+    price: 19.99
+  };
+
+  // Per scraping reale:
+  // const axios = require('axios');
+  // const cheerio = require('cheerio');
+  // const res = await axios.get(url);
+  // const $ = cheerio.load(res.data);
+  // const name = $('selector').text();
+  // const price = parseFloat($('priceSelector').text());
+  // return { name, price };
 }
 
-module.exports = { scrapeAmazonMock };
+module.exports = { getScrapedData };
