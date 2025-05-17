@@ -12,29 +12,19 @@ exports.getAllProducts = async (req, res) => {
   }
 };
 
-// POST - Aggiunge un nuovo prodotto (con scraping o manuale)
+// POST - Aggiunge un nuovo prodotto (con scraping)
 exports.addProduct = async (req, res) => {
-  const { url, category, name, price } = req.body;
+  const { url, category } = req.body;
 
   try {
-    let productData;
+    const scraped = await getScrapedData(url);
 
-    if (url) {
-      const scraped = await getScrapedData(url);
-      productData = {
-        name: scraped.name,
-        price: scraped.price,
-        category,
-      };
-    } else if (name && price) {
-      productData = { name, price, category };
-    } else {
-      return res.status(400).json({
-        message: "Fornire una URL valida per lo scraping o almeno name e price manualmente.",
-      });
-    }
+    const newProduct = new Product({
+      name: scraped.name,
+      price: scraped.price,
+      category,
+    });
 
-    const newProduct = new Product(productData);
     await newProduct.save();
     res.status(201).json(newProduct);
   } catch (error) {
