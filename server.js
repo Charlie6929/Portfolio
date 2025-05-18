@@ -1,5 +1,4 @@
 // server.js migliorato
-
 require("dotenv").config(); // Carica le variabili d'ambiente il prima possibile
 const express = require("express");
 const mongoose = require("mongoose");
