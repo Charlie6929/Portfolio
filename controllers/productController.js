@@ -8,7 +8,7 @@ const Joi = require("joi");
  */
 const productSchema = Joi.object({
   name: Joi.string().required(),
-  price: Joi.number().required(),
+  currentPrice: Joi.number().required(),
   category: Joi.string().required(),
 });
 
@@ -57,7 +57,7 @@ exports.addProduct = async (req, res) => {
     // Validazione dei dati ottenuti dallo scraping
     const { error } = productSchema.validate({
       name: scraped.name,
-      price: scraped.price,
+      currentPrice: scraped.currentPrice,
       category,
     });
     if (error) {
@@ -66,7 +66,7 @@ exports.addProduct = async (req, res) => {
 
     const newProduct = new Product({
       name: scraped.name,
-      price: scraped.price,
+      currentPrice: scraped.currentPrice,
       category,
     });
 
@@ -98,11 +98,11 @@ exports.updateProduct = async (req, res) => {
     // Consentire solo aggiornamento di name, price e category
     const updateData = {};
     if (req.body.name) updateData.name = req.body.name;
-    if (req.body.price) updateData.price = req.body.price;
+    if (req.body.currentPrice) updateData.currenPrice = req.body.price;
     if (req.body.category) updateData.category = req.body.category;
 
     // Validazione dei dati aggiornati
-    const { error } = productSchema.validate({ ...updateData, name: updateData.name || "a", price: updateData.price || 1, category: updateData.category || "a" }, { presence: "optional" });
+    const { error } = productSchema.validate({ ...updateData, name: updateData.name || "a", currentPrice: updateData.currentPrice || 1, category: updateData.category || "a" }, { presence: "optional" });
     if (error) {
       return res.status(400).json({ message: error.details[0].message });
     }
