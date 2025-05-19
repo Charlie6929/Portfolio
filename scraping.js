@@ -21,12 +21,12 @@ exports.getAllProducts = async (req, res) => {
  * @route POST /products
  * @param {string} url - (opzionale) URL da cui effettuare scraping
  * @param {string} name - (opzionale) Nome prodotto (richiesto se non c'è url)
- * @param {number} price - (opzionale) Prezzo prodotto (richiesto se non c'è url)
+ * @param {number} currentPrice - (opzionale) Prezzo prodotto (richiesto se non c'è url)
  * @param {string} category - Categoria prodotto
  * @returns {Object} Prodotto creato
  */
 exports.addProduct = async (req, res) => {
-  const { url, category, name, price } = req.body;
+  const { url, category, name, currentPrice } = req.body;
 
   if (!category) {
     return res.status(400).json({ message: "La categoria è obbligatoria." });
@@ -42,14 +42,14 @@ exports.addProduct = async (req, res) => {
       }
       productData = {
         name: scraped.name,
-        price: scraped.price,
+        price: scraped.currentPrice,
         category,
       };
-    } else if (name && price) {
-      productData = { name, price, category };
+    } else if (name && currentPrice) {
+      productData = { name, currentPrice, category };
     } else {
       return res.status(400).json({
-        message: "Fornire una URL valida per lo scraping o almeno name e price manualmente.",
+        message: "Fornire una URL valida per lo scraping o almeno name e currentPrice manualmente.",
       });
     }
 
