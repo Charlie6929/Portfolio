@@ -41,7 +41,7 @@ router.post(
   [
     // authenticateUser, // decommenta se vuoi autenticazione
     body("name").isString().withMessage("Il nome deve essere una stringa"),
-    body("price").isNumeric().withMessage("Il prezzo deve essere un numero"),
+    body("currentPrice").isNumeric().withMessage("Il prezzo deve essere un numero"),
     validateRequest
   ],
   addProduct
@@ -72,7 +72,7 @@ router.put(
     // authenticateUser, // decommenta se vuoi autenticazione
     param("id").isMongoId().withMessage("ID non valido"),
     body("name").optional().isString().withMessage("Il nome deve essere una stringa"),
-    body("price").optional().isNumeric().withMessage("Il prezzo deve essere un numero"),
+    body("currentPrice").optional().isNumeric().withMessage("Il prezzo deve essere un numero"),
     validateRequest
   ],
   updateProduct
@@ -94,32 +94,3 @@ router.delete(
 );
 
 module.exports = router;
-/*
-// routes/productRoutes.js
-const express = require("express");
-const router = express.Router();
-const {
-  getAllProducts,
-  addProduct,
-  getProductById,
-  updateProduct,
-  deleteProduct
-} = require("../controllers/productController");
-
-// GET tutti i prodotti
-router.get("/", getAllProducts);
-
-// POST un nuovo prodotto
-router.post("/", addProduct);
-
-// GET un prodotto specifico per ID
-router.get("/:id", getProductById);
-
-// PUT aggiornare un prodotto per ID
-router.put("/:id", updateProduct);
-
-// DELETE rimuovere un prodotto per ID
-router.delete("/:id", deleteProduct);
-
-module.exports = router;
-*/
