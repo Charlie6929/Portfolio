@@ -9,8 +9,8 @@ const Joi = require("joi");
 const productSchema = Joi.object({
   name: Joi.string().required(),
   category: Joi.string().required(),
+  url: Joi.string().required(),
   currentPrice: Joi.number().required(),
-  
 });
 
 /**
