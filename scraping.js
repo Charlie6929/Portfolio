@@ -1,4 +1,54 @@
-const Product = require("./models/product");
+const puppeteer = require("puppeteer");
+const Product = require("./models/product"); // Mantienilo se vuoi usarlo direttamente qui
+
+/**
+ * Esegue una ricerca istantanea su Temu come un utente reale
+ * @param {string} keyword - la stringa da ricercare (es. "scarpe nike")
+ * @param {number} maxResults - quanti prodotti restituire (default 5)
+ * @returns {Promise<Array>} lista prodotti [{ name, url, currentPrice, category }]
+ */
+async function getScrapedData(keyword, maxResults = 5) {
+  const browser = await puppeteer.launch({ headless: "new" });
+  const page = await browser.newPage();
+  await page.goto("https://www.temu.com", { waitUntil: "networkidle2" });
+
+  // Accetta cookie se serve (opzionale)
+  try {
+    await page.click('button[aria-label="Accept All"]', { timeout: 3000 });
+  } catch (e) {}
+
+  // Compila la barra di ricerca e invia
+  await page.waitForSelector('input[type="search"]');
+  await page.type('input[type="search"]', keyword);
+  await page.keyboard.press("Enter");
+  await page.waitForNavigation({ waitUntil: "networkidle2" });
+
+  // Estrai i prodotti
+  await page.waitForSelector('[data-sku-id]');
+  const products = await page.evaluate((cat, max) => {
+    const items = Array.from(document.querySelectorAll('[data-sku-id]')).slice(0, max);
+    return items.map(item => {
+      const name = item.querySelector('a span, .product-title')?.innerText || "";
+      const url = item.querySelector('a')?.href || "";
+      const price = item.querySelector('[class*="price"]')?.innerText?.replace(/[^\d,.]/g, '').replace(',', '.') || "";
+      return {
+        name: name.trim(),
+        url: url.startsWith("http") ? url : `https://www.temu.com${url}`,
+        currentPrice: parseFloat(price) || 0,
+        category: cat
+      };
+    });
+  }, keyword, maxResults);
+
+  await browser.close();
+
+  // Filtra risultati vuoti
+  return products.filter(p => p.name && p.url && p.currentPrice);
+}
+
+module.exports = { getScrapedData };
+/*
+ const Product = require("./models/product");
 /*const { getScrapedData } = require("./scraping");
 
 /**
@@ -6,6 +56,7 @@ const Product = require("./models/product");
  * @route GET /products
  * @returns {Array} Lista di prodotti
  */
+/*
 exports.getAllProducts = async (req, res) => {
   try {
     const products = await Product.find();
@@ -25,6 +76,7 @@ exports.getAllProducts = async (req, res) => {
  * @param {string} category - Categoria prodotto
  * @returns {Object} Prodotto creato
  */
+/*
 exports.addProduct = async (req, res) => {
   const { url, category, name, currentPrice } = req.body;
 
@@ -67,6 +119,7 @@ exports.addProduct = async (req, res) => {
  * @route GET /products/:id
  * @returns {Object} Prodotto trovato
  */
+/*
 exports.getProductById = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
@@ -83,6 +136,7 @@ exports.getProductById = async (req, res) => {
  * @route PUT /products/:id
  * @returns {Object} Prodotto aggiornato
  */
+/*
 exports.updateProduct = async (req, res) => {
   try {
     const updated = await Product.findByIdAndUpdate(req.params.id, req.body, {
@@ -102,6 +156,7 @@ exports.updateProduct = async (req, res) => {
  * @route DELETE /products/:id
  * @returns {Object} Messaggio di successo
  */
+/*
 exports.deleteProduct = async (req, res) => {
   try {
     const deleted = await Product.findByIdAndDelete(req.params.id);
@@ -112,3 +167,4 @@ exports.deleteProduct = async (req, res) => {
     res.status(500).json({ message: "Errore durante l'eliminazione", error: error.message });
   }
 };
+*/
