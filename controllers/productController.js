@@ -67,8 +67,9 @@ exports.addProduct = async (req, res) => {
 
     const newProduct = new Product({
       name: scraped.name,
+      category: scraped.category,
+      url: scraped.url,
       currentPrice: scraped.currentPrice,
-      category,
     });
 
     await newProduct.save();
