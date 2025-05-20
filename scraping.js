@@ -1,5 +1,5 @@
 const Product = require("./models/product");
-const { getScrapedData } = require("./scraping");
+/*const { getScrapedData } = require("./scraping");
 
 /**
  * Ottiene tutti i prodotti.
