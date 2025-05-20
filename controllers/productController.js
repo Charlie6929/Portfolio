@@ -8,8 +8,9 @@ const Joi = require("joi");
  */
 const productSchema = Joi.object({
   name: Joi.string().required(),
-  currentPrice: Joi.number().required(),
   category: Joi.string().required(),
+  currentPrice: Joi.number().required(),
+  
 });
 
 /**
