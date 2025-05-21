@@ -1,68 +1,3 @@
-const Product = require("../models/product");
-const { getScrapedData } = require("../scraping");
-const Joi = require("joi");
-
-const productSchema = Joi.object({
-  name: Joi.string().required(),
-  category: Joi.string().required(),
-  url: Joi.string().required(),
-  currentPrice: Joi.number().required(),
-});
-
-const handleError = (res, error, msg = "Errore interno") => {
-  res.status(500).json({ message: msg, error: error.message });
-};
-
-exports.getAllProducts = async (req, res) => {
-  const { page = 1, limit = 10 } = req.query;
-  try {
-    const products = await Product.find()
-      .skip((page - 1) * limit)
-      .limit(Number(limit));
-    const total = await Product.countDocuments();
-    res.json({ products, total, page: Number(page), pages: Math.ceil(total / limit) });
-  } catch (error) {
-    handleError(res, error, "Errore nel recupero prodotti");
-  }
-};
-
-/**
- * POST - Aggiunge prodotti da scraping Temu per qualsiasi keyword
- */
-exports.addProduct = async (req, res) => {
-  const { url: keyword, category } = req.body;
-  if (!keyword || !category) {
-    return res.status(400).json({ message: "url (parola chiave) e category sono obbligatori" });
-  }
-
-  try {
-    // Ottieni array di prodotti dalla ricerca
-    const products = await getScrapedData(keyword);
-
-    if (!products.length) {
-      return res.status(404).json({ message: "Nessun prodotto trovato per la ricerca" });
-    }
-
-    // Validazione dati e salvataggio
-    const saved = [];
-    for (const prod of products) {
-      const productData = { ...prod, category }; // category = quella inserita dall'utente
-      const { error } = productSchema.validate(productData);
-      if (!error) {
-        const newProduct = new Product(productData);
-        await newProduct.save();
-        saved.push(newProduct);
-      }
-    }
-
-    res.status(201).json(saved);
-  } catch (error) {
-    handleError(res, error, "Errore durante l'aggiunta dei prodotti");
-  }
-};
-
-// ... (le altre funzioni restano invariate)
-/*
 // controllers/productController.js
 const Product = require("../models/product");
 const { getScrapedData } = require("../scraping");
@@ -71,7 +6,7 @@ const Joi = require("joi");
 /**
  * Schema di validazione per un prodotto
  */
-/*
+
 const productSchema = Joi.object({
   name: Joi.string().required(),
   category: Joi.string().required(),
@@ -82,7 +17,7 @@ const productSchema = Joi.object({
 /**
  * Funzione di utilità per la gestione uniforme degli errori
  */
-/*
+
 const handleError = (res, error, defaultMessage = "Errore interno") => {
   if (error.name === "ValidationError") {
     res.status(400).json({ message: "Dati non validi", error });
@@ -96,7 +31,6 @@ const handleError = (res, error, defaultMessage = "Errore interno") => {
 /**
  * GET - Ottiene tutti i prodotti con paginazione
  */
-/*
 exports.getAllProducts = async (req, res) => {
   const { page = 1, limit = 10 } = req.query;
   try {
@@ -113,7 +47,6 @@ exports.getAllProducts = async (req, res) => {
 /**
  * POST - Aggiunge un nuovo prodotto (con scraping)
  */
-/*
 exports.addProduct = async (req, res) => {
   const { url, category } = req.body;
 
@@ -152,7 +85,6 @@ exports.addProduct = async (req, res) => {
 /**
  * GET - Recupera un singolo prodotto per ID
  */
-/*
 exports.getProductById = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
@@ -166,7 +98,6 @@ exports.getProductById = async (req, res) => {
 /**
  * PUT - Aggiorna un prodotto per ID
  */
-/*
 exports.updateProduct = async (req, res) => {
   try {
     // Consentire solo aggiornamento di name, price e category
@@ -190,11 +121,10 @@ exports.updateProduct = async (req, res) => {
     handleError(res, error, "Errore durante l'aggiornamento");
   }
 };
-
 /**
  * DELETE - Elimina un prodotto per ID
  */
-/*
+
 exports.deleteProduct = async (req, res) => {
   try {
     const deleted = await Product.findByIdAndDelete(req.params.id);
@@ -204,4 +134,3 @@ exports.deleteProduct = async (req, res) => {
     handleError(res, error, "Errore durante l'eliminazione");
   }
 };
-*/
