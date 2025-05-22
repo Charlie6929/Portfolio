@@ -1,6 +1,7 @@
 // controllers/productController.js
 const Product = require("../models/product");
 const { getScrapedData } = require("../scraping");
+getScrapedData("https://www.temu.com").then(console.log);
 const Joi = require("joi");
 
 /**
