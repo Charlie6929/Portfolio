@@ -1,3 +1,42 @@
+const axios = require("axios");
+const cheerio = require("cheerio");
+
+/**
+ * Estrae i dati di un prodotto da una pagina Temu (o simile).
+ * @param {string} url - L'URL della pagina del prodotto da cui estrarre i dati.
+ * @returns {Promise<{ name: string, currentPrice: number, category: string }|null>}
+ */
+async function getScrapedData(url) {
+  try {
+    const { data } = await axios.get(url, {
+      headers: { "User-Agent": "Mozilla/5.0" }
+    });
+    const $ = cheerio.load(data);
+
+    // NOTA: Temu e siti simili spesso caricano i dati via JavaScript.
+    // Se serve scraping reale, valuta l'uso di strumenti come Puppeteer.
+    // Qui un esempio statico:
+    const name = "Dlink";
+    const category = "router wifi";
+
+    // Tentativo di estrarre il prezzo da una classe generica (modifica secondo le tue esigenze)
+    let currentPrice = null;
+    const priceText = $('[class*=product-price], [class*=price]').first().text();
+    if (priceText) {
+      currentPrice = parseFloat(priceText.replace(/[^0-9,.]/g, '').replace(',', '.'));
+    } else {
+      currentPrice = 37.35; // fallback di esempio
+    }
+
+    return { name, currentPrice, category };
+  } catch (error) {
+    console.error("Errore nello scraping:", error.message);
+    return null;
+  }
+}
+
+module.exports = { getScrapedData };
+/*
 const Product = require("./models/product");
 const axios = require("axios");
 const cheerio = require("cheerio");
@@ -7,6 +46,7 @@ const cheerio = require("cheerio");
  * @param {string} url - L'URL della pagina Temu del prodotto.
  * @returns {Object} { name, currentPrice, category }
  */
+/*
 async function getScrapedData(url) {
   try {
     const { data } = await axios.get(url, { headers: { "User-Agent": "Mozilla/5.0" } });
@@ -38,6 +78,7 @@ async function getScrapedData(url) {
  * @route GET /products
  * @returns {Array} Lista di prodotti
  */
+/*
 exports.getAllProducts = async (req, res) => {
   try {
     const products = await Product.find();
@@ -57,6 +98,7 @@ exports.getAllProducts = async (req, res) => {
  * @param {string} category - Categoria prodotto
  * @returns {Object} Prodotto creato
  */
+/*
 exports.addProduct = async (req, res) => {
   const { url, category, name, currentPrice } = req.body;
 
@@ -99,6 +141,7 @@ exports.addProduct = async (req, res) => {
  * @route GET /products/:id
  * @returns {Object} Prodotto trovato
  */
+/*
 exports.getProductById = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
@@ -115,6 +158,7 @@ exports.getProductById = async (req, res) => {
  * @route PUT /products/:id
  * @returns {Object} Prodotto aggiornato
  */
+/*
 exports.updateProduct = async (req, res) => {
   try {
     const updated = await Product.findByIdAndUpdate(req.params.id, req.body, {
@@ -134,6 +178,7 @@ exports.updateProduct = async (req, res) => {
  * @route DELETE /products/:id
  * @returns {Object} Messaggio di successo
  */
+/*
 exports.deleteProduct = async (req, res) => {
   try {
     const deleted = await Product.findByIdAndDelete(req.params.id);
