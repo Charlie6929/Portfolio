@@ -28,7 +28,7 @@ async function getScrapedData(url) {
       currentPrice = 37.35; // fallback di esempio
     }
 
-    return { name, currentPrice, category };
+    return { name, currentPrice, category, url };
   } catch (error) {
     console.error("Errore nello scraping:", error.message);
     return null;
