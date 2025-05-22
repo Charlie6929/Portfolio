@@ -23,7 +23,7 @@ async function getScrapedData(url) {
     if (priceText) {
       currentPrice = parseFloat(priceText.replace(/[^0-9,.]/g, '').replace(',', '.'));
     } else {
-      currentPrice = 29.99; // valore di esempio
+      currentPrice = 37.35; // valore di esempio
     }
 
     return { name, currentPrice, category };
