@@ -104,7 +104,7 @@ exports.updateProduct = async (req, res) => {
     // Consentire solo aggiornamento di name, price e category
     const updateData = {};
     if (req.body.name) updateData.name = req.body.name;
-    if (req.body.currentPrice) updateData.currenPrice = req.body.price;
+    if (req.body.currentPrice) updateData.currentPrice = req.body.currentPrice;
     if (req.body.category) updateData.category = req.body.category;
 
     // Validazione dei dati aggiornati
