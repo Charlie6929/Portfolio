@@ -2,6 +2,7 @@
 const Product = require("../models/product");
 const { getScrapedData } = require("../scraping");
 getScrapedData("https://www.temu.com").then(console.log);
+console.log(req.body)
 const Joi = require("joi");
 
 /**
