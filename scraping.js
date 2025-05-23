@@ -16,8 +16,8 @@ async function getScrapedData(url) {
     // NOTA: Temu e siti simili spesso caricano i dati via JavaScript.
     // Se serve scraping reale, valuta l'uso di strumenti come Puppeteer.
     // Qui un esempio statico:
-    const name = "Dlink";
-    const category = "router wifi";
+    const name = "T-shirt";
+    const category = "casual da uomo";
 
     // Tentativo di estrarre il prezzo da una classe generica (modifica secondo le tue esigenze)
     let currentPrice = null;
@@ -25,7 +25,7 @@ async function getScrapedData(url) {
     if (priceText) {
       currentPrice = parseFloat(priceText.replace(/[^0-9,.]/g, '').replace(',', '.'));
     } else {
-      currentPrice = 37.35; // fallback di esempio
+      currentPrice = 6.86; // fallback di esempio
     }
 
     return { name, currentPrice, category, url };
