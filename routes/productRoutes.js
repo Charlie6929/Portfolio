@@ -40,10 +40,10 @@ router.post(
   "/",
   [
     // authenticateUser, // decommenta se vuoi autenticazione
-    body("name").isString().withMessage("Il nome deve essere una stringa"),
+    /*body("name").isString().withMessage("Il nome deve essere una stringa"),*/
     body("category").isString().withMessage("La categoria deve essere una stringa"),
     body("url").isString().withMessage("Url deve essere una stringa"),
-    body("currentPrice").isNumeric().withMessage("Il prezzo deve essere un numero"),
+    /*body("currentPrice").isNumeric().withMessage("Il prezzo deve essere un numero"),*/
     validateRequest
   ],
   addProduct
