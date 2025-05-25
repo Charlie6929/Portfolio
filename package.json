@@ -4,6 +4,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
+    "postinstall": "npx playwright install"
   },
   "dependencies": {
     "dotenv": "^16.0.0",
