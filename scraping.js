@@ -13,7 +13,8 @@ async function getScrapedData(url) {
 
     // --- ESTRATTORE NOME PRODOTTO ---
     // Di solito il nome prodotto su Temu è in un <h1>
-    const name = await page.$eval('h1', el => el.textContent.trim()).catch(() => null);
+    const name = await page.$eval('#searchInput', el => el.value.trim()).catch(() => null);
+   /* const name = await page.$eval('h1', el => el.textContent.trim()).catch(() => null); */
 
     // --- ESTRATTORE PREZZO ---
     // Cerca una classe che contiene il prezzo (aggiorna se necessario)
