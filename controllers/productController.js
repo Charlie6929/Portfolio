@@ -34,7 +34,8 @@ const handleError = (res, error, defaultMessage = "Errore interno") => {
   } else if (error.name === "CastError") {
     res.status(404).json({ message: "ID non valido", error });
   } else {
-    res.status(500).json({ message: defaultMessage, error });
+    res.status(500).json({ message: defaultMessage, error: error.message, stack: error.stack });
+    /*res.status(500).json({ message: defaultMessage, error });*/
   }
 };
 
