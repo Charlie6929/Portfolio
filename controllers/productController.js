@@ -85,6 +85,8 @@ exports.addProduct = async (req, res) => {
       currentPrice: scraped.currentPrice,
     });
 
+    console.log("Scraped data:", scraped);
+    console.log("New Product:", newProduct);
     await newProduct.save();
     res.status(201).json(newProduct);
   } catch (error) {
