@@ -30,6 +30,7 @@ async function getScrapedData(url) {
 
     await browser.close();
 
+    console.log({ name, currentPrice, category, url });
     return { name, currentPrice, category, url };
   } catch (error) {
     await browser.close();
