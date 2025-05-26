@@ -1,0 +1,16 @@
+# Cartelle e file da ignorare nella build Docker
+
+node_modules
+npm-debug.log
+Dockerfile
+.dockerignore
+.git
+.gitignore
+.env
+.vscode
+*.md
+*.log
+.idea
+*.swp
+coverage
+dist
