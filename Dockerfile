@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/playwright:v1.44.0-jammy
 
-WORKDIR /app
+WORKDIR /Portfolio
 
 # Copia solo package.json e package-lock.json prima per sfruttare la cache
 COPY package*.json ./
