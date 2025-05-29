@@ -67,6 +67,7 @@ exports.addProduct = async (req, res) => {
       return res.status(400).json({ message: "URL e categoria sono obbligatori" });
     }
     const scraped = await getScrapedData(url);
+    console.log('SCRAPED:', scraped);
 
     // Validazione dei dati ottenuti dallo scraping
     const { error } = productSchema.validate({
