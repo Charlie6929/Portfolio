@@ -8,8 +8,6 @@ const { chromium } = require('playwright');
 async function getScrapedData(url) {
   const fs = require('fs');
   console.log('Contenuto node_modules/playwright-core/.local-browsers:', fs.readdirSync('./node_modules/playwright-core/.local-browsers'));
-  console.log('Contenuto ms-playwright:', fs.readdirSync('/opt/render/.cache/ms-playwright'));
-  console.log('Contenuto chromium_headless_shell-1169:', fs.readdirSync('/opt/render/.cache/ms-playwright/chromium_headless_shell-1169'));
   
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage();
