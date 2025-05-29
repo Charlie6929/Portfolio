@@ -7,7 +7,7 @@ const { chromium } = require('playwright');
  */
 async function getScrapedData(url) {
   const fs = require('fs');
-  console.log('Contenuto node_modules/playwright-core/.local-browsers:', fs.readdirSync('./node_modules/playwright-core/.local-browsers'));
+  /*console.log('Contenuto node_modules/playwright-core/.local-browsers:', fs.readdirSync('./node_modules/playwright-core/.local-browsers'));*/
   
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage();
