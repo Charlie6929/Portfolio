@@ -22,7 +22,8 @@ async function getScrapedData(url) {
     // --- ESTRATTORE PREZZO ---
     // Cerca una classe che contiene il prezzo (aggiorna se necessario)
     let currentPrice = null;
-    const priceText = await page.$eval('[class*=price]', el => el.textContent).catch(() => null);
+    const priceText = await page.$eval('#goods_price', el => el.textContent).catch(() => null);
+    /*const priceText = await page.$eval('[class*=price]', el => el.textContent).catch(() => null);*/
     if (priceText) {
       currentPrice = parseFloat(priceText.replace(/[^0-9,.]/g, '').replace(',', '.'));
     }
