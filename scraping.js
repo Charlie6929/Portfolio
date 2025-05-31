@@ -1,56 +1,46 @@
 const { chromium } = require('playwright');
 
-async function getProductData(baseUrl, searchQuery) {
-    const browser = await chromium.launch({ headless: true });
-    const page = await browser.newPage();
+/**
+ * Estrae i dati di un prodotto da una pagina Temu.
+ * @param {string} url - L'URL della pagina del prodotto Temu.
+ * @returns {Promise<{ name: string|null, currentPrice: number|null, category: string|null, url: string }|null>}
+ */
+async function getScrapedData(url) {
+  const fs = require('fs');
+  /*console.log('Contenuto node_modules/playwright-core/.local-browsers:', fs.readdirSync('./node_modules/playwright-core/.local-browsers'));*/
+  
+  const browser = await chromium.launch({ headless: true });
+  const page = await browser.newPage();
+  try {
+    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
 
-    try {
-        await page.goto(baseUrl, { waitUntil: 'domcontentloaded', timeout: 30000 });
+    // --- ESTRATTORE NOME PRODOTTO ---
+    // Di solito il nome prodotto su Temu è in un <h1>
+    /*const name = await page.$eval('#searchInput', el => el.value.trim()).catch(() => null);*/
+    const name = await page.$eval('h1', el => el.textContent.trim()).catch(() => null); 
 
-        // Rifiuta i cookie
-        try {
-            await page.waitForSelector('button:has-text("Rifiuta tutti")', { timeout: 8000 });
-            await page.click('button:has-text("Rifiuta tutti")');
-        } catch (e) {}
-
-        // Scrivi nella searchbar e invia la ricerca
-        await page.waitForSelector('#searchInput', { timeout: 8000 });
-        await page.fill('#searchInput', searchQuery);
-        await page.keyboard.press('Enter');
-
-        // Attendi che i prodotti siano caricati
-        await page.waitForSelector('a._2Tl9qLr1._1ak1dai3', { timeout: 10000 });
-
-        // Clicca sul primo prodotto
-        const firstProduct = (await page.$$('a._2Tl9qLr1._1ak1dai3'))[0];
-        if (!firstProduct) throw new Error("Nessun prodotto trovato!");
-        await firstProduct.click();
-
-        // Attendi pagina dettaglio
-        await page.waitForSelector('._25g_jM0z', { timeout: 10000 });
-
-        // Estrai dati
-        let name = null, currentPrice = null;
-        try {
-            name = await page.$eval('._25g_jM0z', el => el.textContent.trim());
-        } catch (e) {}
-
-        try {
-            const priceText = await page.$eval('._1vkz0rqG > span:nth-child(2)', el => el.textContent.replace(/[^\d,\.]/g, '').replace(',', '.'));
-            currentPrice = parseFloat(priceText);
-        } catch (e) {}
-
-        const category = searchQuery;
-        const url = page.url();
-
-        await browser.close();
-        // console.log richiesto
-        console.log({ name, currentPrice, category, url });
-        return { name, currentPrice, url, category };
-    } catch (err) {
-        await browser.close();
-        throw err;
+    // --- ESTRATTORE PREZZO ---
+    // Cerca una classe che contiene il prezzo (aggiorna se necessario)
+    let currentPrice = null;
+    const priceText = await page.$eval('#goods_price', el => el.textContent).catch(() => null);
+    /*const priceText = await page.$eval('[class*=price]', el => el.textContent).catch(() => null);*/
+    if (priceText) {
+      currentPrice = parseFloat(priceText.replace(/[^0-9,.]/g, '').replace(',', '.'));
     }
+
+    // --- ESTRATTORE CATEGORIA ---
+    // Su Temu la categoria spesso è in un breadcrumb
+    const category = await page.$eval('nav[aria-label*=Breadcrumb] li:last-child', el => el.textContent.trim()).catch(() => null);
+
+    await browser.close();
+
+    console.log({ name, currentPrice, category, url });
+    return { name, currentPrice, category, url };
+  } catch (error) {
+    await browser.close();
+    console.error("Errore nello scraping:", error.message);
+    return null;
+  }
 }
 
-module.exports = { getProductData };
+module.exports = { getScrapedData };
