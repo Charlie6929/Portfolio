@@ -67,6 +67,7 @@ async function getProductData(baseUrl, searchQuery) {
         }
 
         await browser.close();
+        console.log({ name, currentPrice, category, url });
         return { name, currentPrice, productUrl, imageUrl };
     } catch (err) {
         await browser.close();
